@@ -2,6 +2,7 @@ import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
 import { useRef, useState } from 'react';
+import Lifecycle from './Lifecycle';
 
 // const dumyList = [
 //   {
@@ -69,6 +70,7 @@ function App() {
   };
   return (
     <div className="App">
+      <Lifecycle />
       <DiaryEditor onCreate={onCreate} />
       <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit}/>
       {/* <DiaryList diaryList={dumyList} 더미리스트를 사용했을 때 입력*/}
