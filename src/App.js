@@ -1,8 +1,10 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useRef, useState } from 'react';
-import Lifecycle from './Lifecycle';
+import { useEffect, useRef, useState } from 'react';
+// import Lifecycle from './Lifecycle';
+
+// https://jsonplaceholder.typicode.com/comments //api 사용 연습을 위해 불러온 더미데이터
 
 // const dumyList = [
 //   {
@@ -41,6 +43,25 @@ function App() {
   // setData : DiaryEditor에 전달. 해당 함수를 호출하여 새로운 아이템을 추가.
   // data : DiaryList에 전달. 추가된 데이터를 List에 반영
   const dataId = useRef(0);
+  const getData = async() => { // promise를 반환하는 비동기 함수
+    const res = await fetch( // api 불러오기
+      'https://jsonplaceholder.typicode.com/comments'
+    ).then((res)=>res.json());
+    const initData = res.slice(0,20).map((it)=>{ //객체를 20개만 골라냄
+      return{
+        author : it.email,
+        content : it.body,
+        emotion : Math.floor(Math.random()*5)+1,
+        // 0부터 4까지의 랜덤 난수를 생성 → 소수점을 버리는 fllor.
+        created_date : new Date().getTime(),
+        id : dataId.current++
+      }
+    });
+    setData(initData);
+  };
+  useEffect(()=>{
+    getData();
+  },[]);
   const onCreate = (author,content,emotion) => { // 새로운 일기를 추가하는 함수
     const created_date = new Date().getTime();
     const newItem = {
@@ -70,7 +91,7 @@ function App() {
   };
   return (
     <div className="App">
-      <Lifecycle />
+      {/* <Lifecycle /> */}
       <DiaryEditor onCreate={onCreate} />
       <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit}/>
       {/* <DiaryList diaryList={dumyList} 더미리스트를 사용했을 때 입력*/}
