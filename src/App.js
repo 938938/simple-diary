@@ -1,7 +1,9 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+// import OptimizeTest from './OptimizeTest';
+
 // import Lifecycle from './Lifecycle';
 
 // https://jsonplaceholder.typicode.com/comments //api 사용 연습을 위해 불러온 더미데이터
@@ -89,10 +91,25 @@ function App() {
       )
     )
   };
+  const getDiaryAnalysis = useMemo( // 일기를 분석하는 함수
+    //useMemo : 메모리즈하고 싶은 함수를 감쌈. 콜백함수를 전달.
+    () => {
+    const goodCount = data.filter((it)=>it.emotion>=3).length; // 기분이 3 이상인 배열의 갯수
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return {goodCount, badCount, goodRatio};
+    },[data.length] // data.length가 변화할 때에만 함수가 실행
+  );
+  const {goodCount, badCount, goodRatio} = getDiaryAnalysis;
+  // useMemo를 사용하면 getDiaryAnalysis는 함수가 아니라 값이 됨
   return (
     <div className="App">
+      {/* <OptimizeTest /> */}
       {/* <Lifecycle /> */}
       <DiaryEditor onCreate={onCreate} />
+      <div>전체 일기 : {data.length}</div>
+      <div>기분 좋은 일기 : {goodCount}, 기분 나쁜 일기 : {badCount}</div>
+      <div>기분 좋은 일기의 비율 : {goodRatio}</div>
       <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit}/>
       {/* <DiaryList diaryList={dumyList} 더미리스트를 사용했을 때 입력*/}
     </div>
