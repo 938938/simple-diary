@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import React,{ useRef, useState, useEffect } from 'react';
 
 const DiaryEditor = ({onCreate}) => { // 클래스와 컴포넌트의 이름을 일치, 직관적으로 사용.
+  useEffect(()=>(console.log("DiaryEditor 렌더")));
   const authorInput = useRef();
   const contentInput = useRef();
   const [state, setState] = useState({
@@ -72,4 +73,4 @@ const DiaryEditor = ({onCreate}) => { // 클래스와 컴포넌트의 이름을 
     );
 };
 
-export default DiaryEditor;
+export default React.memo(DiaryEditor); // React.memo를 여기에 사용해도 됨.

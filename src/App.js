@@ -1,7 +1,7 @@
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 // import OptimizeTest from './OptimizeTest';
 
 // import Lifecycle from './Lifecycle';
@@ -64,7 +64,8 @@ function App() {
   useEffect(()=>{
     getData();
   },[]);
-  const onCreate = (author,content,emotion) => { // 새로운 일기를 추가하는 함수
+  const onCreate = useCallback((author,content,emotion) => { // 새로운 일기를 추가하는 함수
+    //useCallback : 메모이제이션된 콜백을 반환. 값을 반환하는 useMemo와 달리 콜백함수를 반환함.
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -74,8 +75,11 @@ function App() {
       id : dataId.current
     }
     dataId.current += 1;
-    setData([newItem, ...data]);
-  }
+    setData((data)=>[newItem, ...data]);
+  },[]);
+  // 두번째 인자의 값이 변하지 않으면 첫번째 인자인 콜백 함수를 계속 재사용할 수 있도록 함
+  // 두번째 인자로 빈배열을 할당하면 새로운 데이터를 입력했을 경우 빈배열을 불러와 기존 데이터가 사라짐.
+  // → setData에 함수형 업데이트를 활용. 빈 배열을 할당해도 최신의 stat를 참고할 수 있게 됨
   const onRemove = (targetId) =>{ // 일기 삭제 함수
     // console.log(`${targetId}가 삭제되었습니다`);
     const newDiaryList = data.filter((it)=>it.id !== targetId);
