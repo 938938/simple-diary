@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import React,{ useRef, useState, useEffect, useContext } from "react";
+import { DiaryDispatchContext } from "./App";
 
-const DiaryItem = ({author, content, created_date, emotion, id, onRemove, onEdit}) =>{
+const DiaryItem = ({author, content, created_date, emotion, id}) =>{
+
+  // useEffect(()=>console.log(`${id}번째 아이템 랜더`));
+  // // 어느 부분이 랜더링 되고 있는지 화인
+
+  const {onRemove,onEdit} = useContext(DiaryDispatchContext);
+
   const [isEdit, setIsEdit] = useState(false); // 수정기능. 활성화 되지 않은 상태가 디폴트(false)
   const toggleIsEdit = () => setIsEdit(!isEdit); // 수정기능의 활성화와 비활성화 반전연산 함수
   const [localContent, setLocalContent] = useState(content); // 수정기능을 핸들링할 state
@@ -62,4 +69,4 @@ const DiaryItem = ({author, content, created_date, emotion, id, onRemove, onEdit
   )
 }
 
-export default DiaryItem;
+export default React.memo(DiaryItem);

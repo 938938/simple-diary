@@ -1,6 +1,10 @@
-import React,{ useRef, useState, useEffect } from 'react';
+import React,{ useRef, useState, useEffect, useContext } from 'react';
+import { DiaryDispatchContext } from './App';
 
-const DiaryEditor = ({onCreate}) => { // 클래스와 컴포넌트의 이름을 일치, 직관적으로 사용.
+const DiaryEditor = () => { // 클래스와 컴포넌트의 이름을 일치, 직관적으로 사용.
+
+  const {onCreate} = useContext(DiaryDispatchContext);
+
   useEffect(()=>(console.log("DiaryEditor 렌더")));
   const authorInput = useRef();
   const contentInput = useRef();
